@@ -4,13 +4,17 @@
 class DBManager
 {
 
+    /**
+     * Get student query
+     *
+     * @param $id
+     * @return array
+     */
     public function getStudent($id) {
         $db_connection = mysqli_connect('localhost', 'root', 'root', 'quantox');
 
-        $query = $db_connection->query('SELECT s.id, s.name, g.value, s.board_id
+        $query = $db_connection->query('SELECT DISTINCT s.id, s.name
 FROM students s
-INNER JOIN student_grades sg ON s.id = sg.student_id  
-INNER JOIN grades g ON sg.grade_id = g.grade_id
 WHERE s.id=' . $id);
         $result = $query->fetch_all();
 
@@ -19,8 +23,6 @@ WHERE s.id=' . $id);
             $student_data[] = [
                 'id' => $row[0],
                 'student_name' => $row[1],
-                'grade_value' => $row[2],
-                'board_id' => $row[3]
             ];
         }
 
@@ -40,5 +42,29 @@ WHERE s.id=' . $id);
         $board = $query->fetch_array();
 
         return $board;
+    }
+
+    /**
+     * Get student grades query
+     *
+     * @param $id
+     * @return array
+     */
+    public function getStudentGrades($id) {
+        $db_connection = mysqli_connect('localhost', 'root', 'root', 'quantox');
+
+        $query = $db_connection->query('SELECT g.value
+FROM students s
+INNER JOIN student_grades sg ON s.id = sg.student_id  
+INNER JOIN grades g ON sg.grade_id = g.grade_id
+WHERE s.id=' . $id);
+        $result = $query->fetch_all();
+
+        $grades = [];
+        foreach ($result as $row) {
+            $grades[] = $row;
+        }
+
+        return $grades;
     }
 }
