@@ -39,16 +39,15 @@ class Student extends DBManager
 
         $xml = new SimpleXMLElement('<student/>');
 
-        $member = $xml->addChild('student');
-        $member->addChild('id', $jsonFile_decoded->id);
-        $member->addChild('name', $jsonFile_decoded->student_name);
-        $member->addChild('avg_grade', $jsonFile_decoded->avg_grade);
+        $xml->addChild('id', $jsonFile_decoded->id);
+        $xml->addChild('name', $jsonFile_decoded->student_name);
+        $xml->addChild('avg_grade', $jsonFile_decoded->avg_grade);
         foreach ($jsonFile_decoded->grades as $grade) {
             foreach ($grade as $value) {
-                $member->addChild('grades', $value);
+                $xml->addChild('grades', $value);
             }
         }
-        $member->addChild('pass', $jsonFile_decoded->pass);
+        $xml->addChild('pass', $jsonFile_decoded->pass);
         Header('Content-type: text/xml');
 
         return $xml->asXML();
